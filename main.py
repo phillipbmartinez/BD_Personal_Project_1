@@ -4,47 +4,7 @@
 
 from prettytable import PrettyTable
 
-def stay_logged_in(stay_logged_in):
-    if stay_logged_in == "yes":
-        return True
-    elif stay_logged_in == "no":
-        return False
-    else:
-        print("Invalid response.")
-        return True
-
-# def get_user_account_info(user_username, user_password):
-#     if user_username != "create":
-#         user_password = input("Please enter your password: ")
-#         return user_username, user_password
-#     elif user_username == "create":
-#         user_username = input("What would you like your username to be? ").lower()
-#         user_password = input("What would you like your password to be? ").lower()
-#         return user_username, user_password
-#     else:
-#         print("Invalid response, exiting portal.")
-#         return False
-
-def user_login(user_username, user_password):
-    bank_user_names = {"pmartinez": "test",
-                       "rlira": "test",}
-    if user_username not in bank_user_names:
-        bank_user_names[user_username] = user_password
-        print("New account created. You're now logged in.")
-        print("***************************** \n")
-        print(bank_user_names)
-    elif (user_username in bank_user_names) and (user_password == bank_user_names.get(user_username)):
-        print("You're now logged in.")
-        print("***************************** \n")
-    else:
-        print("Username and/or password did not match, exiting portal.")
-
-
-
-def main():
-    balance = 0
-    is_running = True
-
+def get_user_account():
     print("Hello! Welcome to the Python Bank web portal!")
     user_username = input("If you have an account with us, please enter it now. If you don't have an account, please type 'Create': ").lower()
     if user_username != "create":
@@ -57,28 +17,93 @@ def main():
 
     user_login(user_username, user_password)
 
-    while is_running:
+def user_login(user_username, user_password):
+    bank_user_names = {"pm": "test",
+                       "rlira": "test",
+                       "pmartinez": "test"}
+    if user_username not in bank_user_names:
+        bank_user_names[user_username] = user_password
+        print("New account created. You're now logged in.")
+        print("***************************** \n")
+        print(bank_user_names)
+    elif (user_username in bank_user_names) and (user_password == bank_user_names.get(user_username)):
+        print("You're now logged in.")
+        print("***************************** \n")
+    else:
+        print("Username and/or password did not match, exiting portal.")
+
+def view_balance(balance):
+    print(f"Your balance is: ${balance:.2f} \n")
+
+def withdraw(balance):
+    amount = float(input("How much money would you like to withdraw? "))
+
+    if amount < 0:
+        print("Invalid response.")
+        return 0
+    elif amount > balance:
+        print("Insufficient funds.")
+        return 0
+    else:
+        balance -= amount
+        print(f"Your balance is now: ${balance:.2f}\n")
+        return amount
+
+def deposit(balance):
+    amount = float(input("How much money would you like to deposit? "))
+
+    if amount < 0:
+        print("Invalid response.")
+        return 0
+    else:
+        balance += amount
+        print(f"Your balance is now: ${balance:.2f}\n")
+        return amount
+
+def transfer(balance):
+    amount = float(input("How much money would you like to transfer? "))
+    account_number = input("What is the account number that you would like to transfer to? ")
+
+    if amount < 0:
+        print("Invalid response.")
+        return 0
+    else:
+        balance -= amount
+        print(f"Your balance is now: ${balance:.2f}\n")
+        return amount
+
+def print_menu():
         table = PrettyTable()
         table.add_column("Action", ["View Balance", "Withdraw", "Deposit", "Transfer", "Log Out"])
         table.add_column("Code", ["1", "2", "3", "4", "5"])
-        # table.add_row(["Action", "Code"])
         print(table)
-        user_action = input("What would you like to do today? ").lower
-        if user_action == 1:
-            pass
-        elif user_action == 2:
-            pass
-        elif user_action == 3:
-            pass
-        elif user_action == 4:
-            pass
-        elif user_action == 5:
-            pass
+
+def main():
+    balance = 0
+    is_running = True
+
+    get_user_account()
+
+    while is_running:
+        print_menu()
+
+        user_action = input("What would you like to do today? ")
+        if user_action == "1":
+            view_balance(balance)
+        elif user_action == "2":
+            balance -= withdraw(balance)
+        elif user_action == "3":
+            balance += deposit(balance)
+        elif user_action == "4":
+            balance -= transfer(balance)
+        elif user_action == "5":
+            is_running = False
         else:
-            print("Invalid response.")
+            print("Invalid response. Please try again.")
+    print("Thank you, have a nice day.")
 
 
-
-main()
+if __name__ == '__main__':
+    main()
 
 
